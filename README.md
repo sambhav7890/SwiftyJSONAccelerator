@@ -5,15 +5,8 @@
 [![Build
 Status](https://travis-ci.org/sambhav7890/SwiftyJSONAccelerator.svg?branch=master)](https://travis-ci.org/sambhav7890/SwiftyJSONAccelerator) [![codecov](https://codecov.io/gh/sambhav7890/SwiftyJSONAccelerator/branch/master/graph/badge.svg)](https://codecov.io/gh/sambhav7890/SwiftyJSONAccelerator)
 
-**Version v1.4.0 Released!**
-
-- Generate models from multiple JSON files in a folder at with one click!
-- CLI interface - JSON to code directly from CLI, [read more about how it works!](#CLI)
-- Removed Cocoapods from the project due to CLI not being able to work with pods, switched to sub-modules.
-- Minor bug fixes.
-- Better installation directly from the repo with `make install`.
-
-[Previous Release Notes](#previous-releases)
+## Previous Releases 
+[here](https://github.com/insanoid/SwiftyJSONAccelerator)
 
 ## Installing
 
@@ -79,8 +72,6 @@ Currently, the pattern is very similar to its Objective-C counterpart. It genera
 - Follow the examples in [Library-Extensions](https://github.com/sambhav7890/SwiftyJSONAccelerator/blob/master/Core/Library-Extensions) and create a struct implementing`ModelFile`. Follow the other extensions for SwiftyJSON and ObjectMapper, they tell you what all you can replace based on your libraries specification. You will also have to add the file to [SwiftyJSONAccelerator-CLI/FileGenerator.swift](https://github.com/sambhav7890/SwiftyJSONAccelerator/blob/master/SwiftyJSONAccelerator-CLI/FileGenerator.swift) as string unfortunately for now.
 - Do the necessary UI changes for the dropdown.
 - Add tests for your library.
-
-## Previous Releases [here](https://github.com/insanoid/SwiftyJSONAccelerator)
 
 ## Todo
 
