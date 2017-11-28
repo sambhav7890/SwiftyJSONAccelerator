@@ -552,6 +552,7 @@
 					};
 					93F1744F1BD0707D007E7DFC = {
 						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = V94Z6JM853;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 93F1743E1BD0707D007E7DFC;
@@ -929,11 +930,12 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = V94Z6JM853;
 				INFOPLIST_FILE = "SwiftyJSONAcceleratorTests/Support Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.karthik.SwiftyJSONAcceleratorTests;
 				PRODUCT_NAME = SwiftyJSONAccelerator;
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftyJSONAccelerator.app/Contents/MacOS/SwiftyJSONAccelerator";
 			};
@@ -946,11 +948,12 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = V94Z6JM853;
 				INFOPLIST_FILE = "SwiftyJSONAcceleratorTests/Support Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.karthik.SwiftyJSONAcceleratorTests;
 				PRODUCT_NAME = SwiftyJSONAccelerator;
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftyJSONAccelerator.app/Contents/MacOS/SwiftyJSONAccelerator";
 			};

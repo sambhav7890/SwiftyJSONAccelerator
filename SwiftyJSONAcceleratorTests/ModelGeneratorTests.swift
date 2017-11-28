@@ -10,201 +10,6 @@ import Foundation
 import XCTest
 import Nimble
 
-fileprivate extension JSONMappingLibrary {
-
-	static func testJSON() -> [String: Any] {
-		return ["value_one": "string value",
-		 "value_two": 3,
-		 "value_three": true,
-		 "value_four": 3.4,
-		 "value_dont_show": JSON.null,
-		 "value_five": ["string", "random_stuff"],
-		 "value_six": ["sub_value": "value", "sub_value_second": false],
-		 "value_seven": [
-			[
-				"sub_value_third": 4.5,
-				"double_value": Double.init(5.3),
-				"sub_value_four": "value",
-				"internal": "renamed_value",
-				"sub_value_five": ["two_level_down": "value"]
-			]
-			],
-		 "value_eight": []
-		]
-	}
-
-	var initializers: [String] {
-		switch self {
-		case .marshal:
-			return [
-				"valueSeven = try? object.value(for: SerializationKeys.valueSeven)",
-				"valueTwo = try? object.value(for: SerializationKeys.valueTwo)",
-				"valueFour = try? object.value(for: SerializationKeys.valueFour)",
-				"valueFive = try? object.value(for: SerializationKeys.valueFive)",
-				"valueSix = try? object.value(for: SerializationKeys.valueSix)",
-				"valueOne = try? object.value(for: SerializationKeys.valueOne)",
-				"valueThree = try? object.value(for: SerializationKeys.valueThree)",
-				"valueEight = try? object.value(for: SerializationKeys.valueEight)"
-			]
-		case .objectMapper:
-			return [
-				"valueSeven <- map[SerializationKeys.valueSeven]",
-				"valueTwo <- map[SerializationKeys.valueTwo]",
-				"valueFour <- map[SerializationKeys.valueFour]",
-				"valueFive <- map[SerializationKeys.valueFive]",
-				"valueSix <- map[SerializationKeys.valueSix]",
-				"valueEight <- map[SerializationKeys.valueEight]",
-				"valueOne <- map[SerializationKeys.valueOne]",
-				"valueThree <- map[SerializationKeys.valueThree]"
-			]
-		case .swiftyJSON:
-			return [
-				"if let items = json[SerializationKeys.valueSeven].array { valueSeven = items.map { ACValueSeven(json: $0) } }",
-				"valueTwo = json[SerializationKeys.valueTwo].int",
-				"valueFour = json[SerializationKeys.valueFour].float",
-				"if let items = json[SerializationKeys.valueFive].array { valueFive = items.map { $0.stringValue } }",
-				"valueSix = ACValueSix(json: json[SerializationKeys.valueSix])",
-				"valueOne = json[SerializationKeys.valueOne].string",
-				"valueThree = json[SerializationKeys.valueThree].boolValue",
-				"if let items = json[SerializationKeys.valueEight].array { valueEight = items.map { $0.object} }"
-			]
-		case .swift4:
-			return []
-		}
-	}
-
-	var decoders: [String] {
-		switch self {
-		case .marshal, .objectMapper, .swiftyJSON:
-			return [
-				"self.valueSeven = aDecoder.decodeObject(forKey: SerializationKeys.valueSeven) as? [ACValueSeven]",
-				"self.valueTwo = aDecoder.decodeObject(forKey: SerializationKeys.valueTwo) as? Int",
-				"self.valueFour = aDecoder.decodeObject(forKey: SerializationKeys.valueFour) as? Float",
-				"self.valueFive = aDecoder.decodeObject(forKey: SerializationKeys.valueFive) as? [String]",
-				"self.valueSix = aDecoder.decodeObject(forKey: SerializationKeys.valueSix) as? ACValueSix",
-				"self.valueOne = aDecoder.decodeObject(forKey: SerializationKeys.valueOne) as? String",
-				"self.valueThree = aDecoder.decodeBool(forKey: SerializationKeys.valueThree)",
-				"self.valueEight = aDecoder.decodeObject(forKey: SerializationKeys.valueEight) as? [Any]"
-			]
-		case .swift4:
-			return []
-		}
-	}
-
-	var encoders: [String] {
-		switch self {
-		case .marshal, .objectMapper, .swiftyJSON:
-			return [
-				"aCoder.encode(valueSeven, forKey: SerializationKeys.valueSeven)",
-				"aCoder.encode(valueTwo, forKey: SerializationKeys.valueTwo)",
-				"aCoder.encode(valueFour, forKey: SerializationKeys.valueFour)",
-				"aCoder.encode(valueFive, forKey: SerializationKeys.valueFive)",
-				"aCoder.encode(valueSix, forKey: SerializationKeys.valueSix)",
-				"aCoder.encode(valueOne, forKey: SerializationKeys.valueOne)",
-				"aCoder.encode(valueThree, forKey: SerializationKeys.valueThree)",
-				"aCoder.encode(valueEight, forKey: SerializationKeys.valueEight)"
-			]
-		case .swift4:
-			return []
-		}
-	}
-
-	var properties: [String] {
-		switch self {
-		case .marshal, .objectMapper, .swiftyJSON:
-			return [
-				"public var valueSeven: [ACValueSeven]?",
-				"public var valueTwo: Int?",
-				"public var valueFour: Float?",
-				"public var valueFive: [String]?",
-				"public var valueSix: ACValueSix?",
-				"public var valueOne: String?",
-				"public var valueThree: Bool? = false",
-				"public var valueEight: [Any]?"
-			]
-		case .swift4:
-			return [
-				"public var valueSeven: [ACValueSeven]?",
-				"public var valueTwo: Int?",
-				"public var valueFour: Float?",
-				"public var valueFive: [String]?",
-				"public var valueSix: ACValueSix?",
-				"public var valueOne: String?",
-				"public var valueThree: Bool = false",
-				"public var valueEight: [Any]?"
-			]
-		}
-	}
-
-	var dictionaryDescriptions: [String] {
-		switch self {
-		case .marshal, .objectMapper, .swiftyJSON:
-			return [
-				"if let value = valueSix { dictionary[SerializationKeys.valueSix] = value.dictionaryRepresentation() }",
-				"if let value = valueFive { dictionary[SerializationKeys.valueFive] = value }",
-				"if let value = valueTwo { dictionary[SerializationKeys.valueTwo] = value }",
-				"dictionary[SerializationKeys.valueThree] = valueThree",
-				"if let value = valueSeven { dictionary[SerializationKeys.valueSeven] = value.map { $0.dictionaryRepresentation() } }",
-				"if let value = valueOne { dictionary[SerializationKeys.valueOne] = value }",
-				"if let value = valueFour { dictionary[SerializationKeys.valueFour] = value }",
-				"if let value = valueEight { dictionary[SerializationKeys.valueEight] = value }"
-			]
-		case .swift4:
-			return []
-		}
-	}
-
-	var mapping: [String] {
-		switch self {
-		case .marshal, .objectMapper, .swiftyJSON:
-			return  [
-				"static let valueSeven = \"value_seven\"",
-				"static let valueTwo = \"value_two\"",
-				"static let valueFour = \"value_four\"",
-				"static let valueFive = \"value_five\"",
-				"static let valueSix = \"value_six\"",
-				"static let valueOne = \"value_one\"",
-				"static let valueThree = \"value_three\"",
-				"static let valueEight = \"value_eight\""
-			]
-		case .swift4:
-			return [
-				"case valueSeven = \"value_seven\"",
-				"case valueTwo = \"value_two\"",
-				"case valueFour = \"value_four\"",
-				"case valueFive = \"value_five\"",
-				"case valueSix = \"value_six\"",
-				"case valueOne = \"value_one\"",
-				"case valueThree = \"value_three\"",
-				"case valueEight = \"value_eight\""
-			]
-		}
-	}
-}
-
-fileprivate extension ModelGenerationConfiguration {
-
-	func testData(for path: KeyPath<ModelComponent,[String]>) -> [String] {
-		switch path {
-		case \ModelComponent.initialisers:
-			return self.modelMappingLibrary.initializers
-		case \ModelComponent.decoders:
-			return self.modelMappingLibrary.decoders
-		case \ModelComponent.encoders:
-			return self.modelMappingLibrary.encoders
-		case \ModelComponent.properties:
-			return self.modelMappingLibrary.properties
-		case \ModelComponent.dictionaryDescriptions:
-			return self.modelMappingLibrary.dictionaryDescriptions
-		case \ModelComponent.mappingConstants:
-			return self.modelMappingLibrary.mapping
-		default:
-			return []
-		}
-	}
-}
-
-
 /// Test cases for the model Generator.
 class ModelGeneratorTests: XCTestCase {
 
@@ -487,12 +292,201 @@ class ModelGeneratorTests: XCTestCase {
 		let data = dataComponent ?? []
 		expect(modelComponent.count).to(equal(data.count))
 		for component in data {
-			let expectation = expect(modelComponent.contains(component))
-			if !expectation.to(equal(true)) {
-				print(modelComponent)
-				print(component)
-			}
+			expect(modelComponent.contains(component)).to(equal(true))
+		}
+	}
+}
 
+fileprivate extension JSONMappingLibrary {
+
+	static func testJSON() -> [String: Any] {
+		return ["value_one": "string value",
+		        "value_two": 3,
+		        "value_three": true,
+		        "value_four": 3.4,
+		        "value_dont_show": JSON.null,
+		        "value_five": ["string", "random_stuff"],
+		        "value_six": ["sub_value": "value", "sub_value_second": false],
+		        "value_seven": [
+					[
+						"sub_value_third": 4.5,
+						"double_value": Double.init(5.3),
+						"sub_value_four": "value",
+						"internal": "renamed_value",
+						"sub_value_five": ["two_level_down": "value"]
+					]
+			],
+		        "value_eight": []
+		]
+	}
+
+	var initializers: [String] {
+		switch self {
+		case .marshal:
+			return [
+				"valueSeven = try? object.value(for: SerializationKeys.valueSeven)",
+				"valueTwo = try? object.value(for: SerializationKeys.valueTwo)",
+				"valueFour = try? object.value(for: SerializationKeys.valueFour)",
+				"valueFive = try? object.value(for: SerializationKeys.valueFive)",
+				"valueSix = try? object.value(for: SerializationKeys.valueSix)",
+				"valueOne = try? object.value(for: SerializationKeys.valueOne)",
+				"valueThree = try? object.value(for: SerializationKeys.valueThree)",
+				"valueEight = try? object.value(for: SerializationKeys.valueEight)"
+			]
+		case .objectMapper:
+			return [
+				"valueSeven <- map[SerializationKeys.valueSeven]",
+				"valueTwo <- map[SerializationKeys.valueTwo]",
+				"valueFour <- map[SerializationKeys.valueFour]",
+				"valueFive <- map[SerializationKeys.valueFive]",
+				"valueSix <- map[SerializationKeys.valueSix]",
+				"valueEight <- map[SerializationKeys.valueEight]",
+				"valueOne <- map[SerializationKeys.valueOne]",
+				"valueThree <- map[SerializationKeys.valueThree]"
+			]
+		case .swiftyJSON:
+			return [
+				"if let items = json[SerializationKeys.valueSeven].array { valueSeven = items.map { ACValueSeven(json: $0) } }",
+				"valueTwo = json[SerializationKeys.valueTwo].int",
+				"valueFour = json[SerializationKeys.valueFour].float",
+				"if let items = json[SerializationKeys.valueFive].array { valueFive = items.map { $0.stringValue } }",
+				"valueSix = ACValueSix(json: json[SerializationKeys.valueSix])",
+				"valueOne = json[SerializationKeys.valueOne].string",
+				"valueThree = json[SerializationKeys.valueThree].boolValue",
+				"if let items = json[SerializationKeys.valueEight].array { valueEight = items.map { $0.object} }"
+			]
+		case .swift4:
+			return []
+		}
+	}
+
+	var decoders: [String] {
+		switch self {
+		case .marshal, .objectMapper, .swiftyJSON:
+			return [
+				"self.valueSeven = aDecoder.decodeObject(forKey: SerializationKeys.valueSeven) as? [ACValueSeven]",
+				"self.valueTwo = aDecoder.decodeObject(forKey: SerializationKeys.valueTwo) as? Int",
+				"self.valueFour = aDecoder.decodeObject(forKey: SerializationKeys.valueFour) as? Float",
+				"self.valueFive = aDecoder.decodeObject(forKey: SerializationKeys.valueFive) as? [String]",
+				"self.valueSix = aDecoder.decodeObject(forKey: SerializationKeys.valueSix) as? ACValueSix",
+				"self.valueOne = aDecoder.decodeObject(forKey: SerializationKeys.valueOne) as? String",
+				"self.valueThree = aDecoder.decodeBool(forKey: SerializationKeys.valueThree)",
+				"self.valueEight = aDecoder.decodeObject(forKey: SerializationKeys.valueEight) as? [Any]"
+			]
+		case .swift4:
+			return []
+		}
+	}
+
+	var encoders: [String] {
+		switch self {
+		case .marshal, .objectMapper, .swiftyJSON:
+			return [
+				"aCoder.encode(valueSeven, forKey: SerializationKeys.valueSeven)",
+				"aCoder.encode(valueTwo, forKey: SerializationKeys.valueTwo)",
+				"aCoder.encode(valueFour, forKey: SerializationKeys.valueFour)",
+				"aCoder.encode(valueFive, forKey: SerializationKeys.valueFive)",
+				"aCoder.encode(valueSix, forKey: SerializationKeys.valueSix)",
+				"aCoder.encode(valueOne, forKey: SerializationKeys.valueOne)",
+				"aCoder.encode(valueThree, forKey: SerializationKeys.valueThree)",
+				"aCoder.encode(valueEight, forKey: SerializationKeys.valueEight)"
+			]
+		case .swift4:
+			return []
+		}
+	}
+
+	var properties: [String] {
+		switch self {
+		case .marshal, .objectMapper, .swiftyJSON:
+			return [
+				"public var valueSeven: [ACValueSeven]?",
+				"public var valueTwo: Int?",
+				"public var valueFour: Float?",
+				"public var valueFive: [String]?",
+				"public var valueSix: ACValueSix?",
+				"public var valueOne: String?",
+				"public var valueThree: Bool? = false",
+				"public var valueEight: [Any]?"
+			]
+		case .swift4:
+			return [
+				"public var valueSeven: [ACValueSeven]?",
+				"public var valueTwo: Int?",
+				"public var valueFour: Float?",
+				"public var valueFive: [String]?",
+				"public var valueSix: ACValueSix?",
+				"public var valueOne: String?",
+				"public var valueThree: Bool = false",
+				"public var valueEight: [Any]?"
+			]
+		}
+	}
+
+	var dictionaryDescriptions: [String] {
+		switch self {
+		case .marshal, .objectMapper, .swiftyJSON:
+			return [
+				"if let value = valueSix { dictionary[SerializationKeys.valueSix] = value.dictionaryRepresentation() }",
+				"if let value = valueFive { dictionary[SerializationKeys.valueFive] = value }",
+				"if let value = valueTwo { dictionary[SerializationKeys.valueTwo] = value }",
+				"dictionary[SerializationKeys.valueThree] = valueThree",
+				"if let value = valueSeven { dictionary[SerializationKeys.valueSeven] = value.map { $0.dictionaryRepresentation() } }",
+				"if let value = valueOne { dictionary[SerializationKeys.valueOne] = value }",
+				"if let value = valueFour { dictionary[SerializationKeys.valueFour] = value }",
+				"if let value = valueEight { dictionary[SerializationKeys.valueEight] = value }"
+			]
+		case .swift4:
+			return []
+		}
+	}
+
+	var mapping: [String] {
+		switch self {
+		case .marshal, .objectMapper, .swiftyJSON:
+			return  [
+				"static let valueSeven = \"value_seven\"",
+				"static let valueTwo = \"value_two\"",
+				"static let valueFour = \"value_four\"",
+				"static let valueFive = \"value_five\"",
+				"static let valueSix = \"value_six\"",
+				"static let valueOne = \"value_one\"",
+				"static let valueThree = \"value_three\"",
+				"static let valueEight = \"value_eight\""
+			]
+		case .swift4:
+			return [
+				"case valueSeven = \"value_seven\"",
+				"case valueTwo = \"value_two\"",
+				"case valueFour = \"value_four\"",
+				"case valueFive = \"value_five\"",
+				"case valueSix = \"value_six\"",
+				"case valueOne = \"value_one\"",
+				"case valueThree = \"value_three\"",
+				"case valueEight = \"value_eight\""
+			]
+		}
+	}
+}
+
+fileprivate extension ModelGenerationConfiguration {
+
+	func testData(for path: KeyPath<ModelComponent,[String]>) -> [String] {
+		switch path {
+		case \ModelComponent.initialisers:
+			return self.modelMappingLibrary.initializers
+		case \ModelComponent.decoders:
+			return self.modelMappingLibrary.decoders
+		case \ModelComponent.encoders:
+			return self.modelMappingLibrary.encoders
+		case \ModelComponent.properties:
+			return self.modelMappingLibrary.properties
+		case \ModelComponent.dictionaryDescriptions:
+			return self.modelMappingLibrary.dictionaryDescriptions
+		case \ModelComponent.mappingConstants:
+			return self.modelMappingLibrary.mapping
+		default:
+			return []
 		}
 	}
 }

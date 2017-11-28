@@ -23,7 +23,7 @@ class JSONHelperTests: XCTestCase {
   func testIsValidJSONString() {
     var response = JSONHelper.isStringValidJSON("temp")
     expect(response.0).to(equal(false))
-    expect(response.1).notTo(equal(nil))
+    expect(response.1).notTo(beNil())
 
     response = JSONHelper.isStringValidJSON("{\"key\":\"value\"}")
     expect(response.0).to(equal(true))
