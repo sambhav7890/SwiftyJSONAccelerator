@@ -44,7 +44,7 @@ extension FileGenerator {
 
 		if configuration.modelMappingLibrary == .swift4 {
 			content = content.replacingOccurrences(of: "{SERIALIZATION_KEYS_KIND}", with: "enum")
-			content = content.replacingOccurrences(of: "{SERIALIZATION_KEYS_EXTENSIONS}", with: " : String, CodingKeys")
+			content = content.replacingOccurrences(of: "{SERIALIZATION_KEYS_EXTENSIONS}", with: " : String, CodingKey")
 		} else {
 			content = content.replacingOccurrences(of: "{SERIALIZATION_KEYS_KIND}", with: "struct")
 			content = content.replacingOccurrences(of: "{SERIALIZATION_KEYS_EXTENSIONS}", with: "")
